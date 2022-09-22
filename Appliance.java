@@ -5,10 +5,13 @@
 // For COMP 249 Section D - Fall 2022
 // Started on: sept 16, 2022
 // -----------------------------------------------------
+
+import java.util.Scanner;   // ADDED IMPORT
+
 class Appliance {
     private String type;
     private String brand;
-    private long serialNumber;
+    final private long serialNumber;    // ADDED FINAL
     static long SNCtr = 100000000;
     static  int numOfAppliances = 0;
     private double price;
@@ -20,12 +23,12 @@ class Appliance {
         serialNumber = SNCtr;
         SNCtr++;
         numOfAppliances++;
-        price = 0.0;
+        price = 1.0;    // CHANGED TO 1 INSTEAD OF 0
     }
-    public Appliance(String type, String brand, double price, long serialNumber){
+    public Appliance(String type, String brand, double price, long serialNumber){       // ADDED PRICE CATCH
         this.type = type;
         this.brand = brand;
-        this.price = price;
+        this.price = (price >= 1) ? price : 1;
         serialNumber = SNCtr;
         SNCtr++;
         numOfAppliances++;
@@ -56,8 +59,8 @@ class Appliance {
     public double getPrice(){
         return price;
     }
-    public void setPrice(double price){
-        this.price = price;
+    public void setPrice(double price){     // ADDED CATCH
+        this.price = (price >= 1) ? price : 1;
     }
     //toString method returns all info of the appliance object
     public String toString()
@@ -73,8 +76,24 @@ class Appliance {
     {
         return (this.type.equals(other.type) && this.brand.equals(other.brand) && this.price == other.price && this.serialNumber == other.serialNumber);
     }
-    public static void main(String[] args) {
     
+    
+    public static void main(String[] args) {    // STARTED DRIVER
+        Scanner userInput = new Scanner(System.in);
+        
+        System.out.println("Welcome to the fantastic appliance tracking software!");
+        System.out.println("What is the maximum amount of appliances that your store can contain, or the max amount that you would like to aquire?");
+        int maxAppliances = userInput.nextInt;
+        Appliance[] inventory = new Appliance[maxAppliances];
+        
+        System.out.println("What do you want to do?");
+        System.out.println("\t1.\tEnter new appliances");
+        System.out.println("\t2.\tChange information of an appliance (password required)");
+        System.out.println("\t3\tDisplay all appliances of by a specific brand");
+        System.out.println("\t3\tDisplay all appliances under a certain price");
+        System.out.println("\t3\tQuit");
+        System.out.println("Please enter your choice>");
+        
     }
 
 }
