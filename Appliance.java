@@ -91,9 +91,10 @@ class Appliance {
         int triedAttempts = 0; // for the password attemps in a row (max is 3)
         int inventoryCount = 0;
         boolean enteringAppliances = true;
-        
+
+        int code = menuOptions();
         do {
-            int code = menuOptions();
+            
             
             if (code == 1){
                 while (triedAttempts < 3){
@@ -112,7 +113,7 @@ class Appliance {
                                 System.out.print("Please enter appliance price: ");
                                 double enteredPrice = userInput.nextDouble();
 
-                                Appliance[numOfAppliances] = new Appliance(enteredType, enteredBrand, enteredPrice);
+                                inventory[numOfAppliances] = new Appliance(enteredType, enteredBrand, enteredPrice);
                                 System.out.print("If you would like to add another appliance, enter the letter 'y', otherwise enter any other key: ");
                                 String answer = userInput.next();
                                 if (answer.equals("y")){
@@ -148,12 +149,12 @@ class Appliance {
             triedAttempts = 0;
         }
         while (code != 5);
-        
+        userInput.close();
     }   // main
     
     
     public static int menuOptions(){
-        Scanner userInputM = new Scanner(System.in);
+        Scanner userInput = new Scanner(System.in);
         
         System.out.println("What do you want to do?");
         System.out.println("\t1.\tEnter new appliances");
@@ -164,7 +165,7 @@ class Appliance {
         System.out.println("Please enter your choice>"); 
         
         if (userInput.hasNextInt()) {
-            inputNum = userInput.nextInt();
+            int inputNum = userInput.nextInt();
             if (inputNum > 0 && inputNum <= 5){
                 return inputNum;
             }
@@ -175,9 +176,12 @@ class Appliance {
         }
         else {
           
-  System.out.println("Please enter an integer code");
+            System.out.println("Please enter an integer code");
             menuOptions();
+             
         }
+        
+        return 0; //to make the compiler happy, needs that guaranteed return
     }   // menuOptions()
 
 }   // class
