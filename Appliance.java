@@ -135,9 +135,17 @@ class Appliance {
                     else{
                         System.out.println("Wrong password");
                         triedAttempts++;
-                        totalAttempts++;
+                        totalAttempts++; 
                     }
+                    
                 }
+                
+            }
+            else if(code == 2)
+            {
+                
+
+
             }   // code 1
             
             
@@ -145,10 +153,12 @@ class Appliance {
                 System.out.println("Program detected suspicious activities and will terminate immediately!");
                 System.exit(0);
             }
+            menuOptions();
             
             triedAttempts = 0;
         }
         while (code != 5);
+        
         userInput.close();
     }   // main
     
@@ -159,9 +169,9 @@ class Appliance {
         System.out.println("What do you want to do?");
         System.out.println("\t1.\tEnter new appliances");
         System.out.println("\t2.\tChange information of an appliance (password required)");
-        System.out.println("\t3\tDisplay all appliances of by a specific brand");
-        System.out.println("\t3\tDisplay all appliances under a certain price");
-        System.out.println("\t3\tQuit");
+        System.out.println("\t3.\tDisplay all appliances of by a specific brand");
+        System.out.println("\t4.\tDisplay all appliances under a certain price");
+        System.out.println("\t5.\tQuit");
         System.out.println("Please enter your choice>"); 
         
         if (userInput.hasNextInt()) {
