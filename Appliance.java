@@ -65,7 +65,7 @@ class Appliance {
     //toString method returns all info of the appliance object
     public String toString()
     {
-        return "Type: " + type + " Brand: " + brand + " Serial Number: " + serialNumber + " Price: " + price;
+        return "Type: " + type + "\tBrand: " + brand + "\tSerial Number: " + serialNumber + "\tPrice: " + price;
     }
     //returns the number of appliances
     public int findNumberOfCreatedAppliances(){
@@ -90,11 +90,10 @@ class Appliance {
         int totalAttempts = 0;    // for the total password attempts (max is 12)
         int triedAttempts = 0; // for the password attemps in a row (max is 3)
         int inventoryCount = 0;
-        boolean enteringAppliances = true;
 
-        int code = menuOptions();
+        int code;
         do {
-            
+        	 code = menuOptions();
             
             if (code == 1){
                 while (triedAttempts < 3){
@@ -103,9 +102,9 @@ class Appliance {
                     if (enteredPassword.equals(password)){
                         System.out.println("How many appliances do you want?");
                         int appliancesToAdd = userInput.nextInt();
-                        enteringAppliances = true;
-                        while (enteringAppliances){
-                            if (inventoryCount + appliancesToAdd <= maxAppliances){
+                        if (inventoryCount + appliancesToAdd <= maxAppliances){
+                        	for (int i = 1; i <= appliancesToAdd; i++) {
+                        		System.out.println("Adding appliance " + i);
                                 System.out.print("Please enter appliance type: ");
                                 String enteredType = userInput.next();
                                 System.out.print("Please enter appliance brand: ");
@@ -114,20 +113,15 @@ class Appliance {
                                 double enteredPrice = userInput.nextDouble();
 
                                 inventory[numOfAppliances] = new Appliance(enteredType, enteredBrand, enteredPrice);
-                                System.out.print("If you would like to add another appliance, enter the letter 'y', otherwise enter any other key: ");
-                                String answer = userInput.next();
-                                if (answer.equals("y")){
-                                    System.out.println("Adding another appliance");
-                                }
-                                else{
-                                    enteringAppliances = false;
-                                }
-                            }
-                            else{
-                                System.out.println("There are only " + (maxAppliances - inventoryCount) + " spaces left");
-                                enteringAppliances = false;
-                            }
+                                System.out.println();
+                        	}
+                           
+                        	inventoryCount += appliancesToAdd;
                         }
+                        else{
+                            System.out.println("There are only " + (maxAppliances - inventoryCount) + " spaces left");
+                        }
+                        
                         triedAttempts = 0;
                         totalAttempts = 0;
                         break; // to break out of password check loop
@@ -140,25 +134,35 @@ class Appliance {
                     
                 }
                 
-            }
+            }	// code 1
+            
             else if(code == 2)
             {
                 
 
 
-            }   // code 1
+            }
+            
+            else if(code == 3)
+            {
+                
+            	System.out.print("Please enter a brand name: ");
+            	String brand = userInput.next();
+            	findAppliancesBy(brand, inventory);
+
+            }
             
             
             if (totalAttempts == 12){
                 System.out.println("Program detected suspicious activities and will terminate immediately!");
                 System.exit(0);
             }
-            menuOptions();
+            //menuOptions();
             
             triedAttempts = 0;
         }
         while (code != 5);
-        
+        System.out.println("Bye bye now!");
         userInput.close();
     }   // main
     
@@ -190,8 +194,26 @@ class Appliance {
             menuOptions();
              
         }
-        
+        userInput.close();
         return 0; //to make the compiler happy, needs that guaranteed return
     }   // menuOptions()
-
+    
+    public static void findAppliancesBy(String brand, Appliance[] inventory) {
+    	int totalAppliances = 0;
+    	System.out.println("Here are all the Appliances of the brand '" + brand + "':");
+    	for (Appliance appliance : inventory) {
+    		if (appliance != null) {
+    			if (appliance.getBrand().equals(brand)) {
+        			System.out.println(appliance);
+        			totalAppliances++;
+        		}
+    		}
+    	}
+    	
+    	if (totalAppliances == 0) {
+    		System.out.println("No appliances found with brand '" + brand + "'.");
+    	}
+    	System.out.println();
+    }	// findAppliancesBy()
 }   // class
+
