@@ -93,7 +93,7 @@ class Appliance {
 
         int code;
         do {
-        	 code = menuOptions();
+            code = menuOptions();
             
             if (code == 1){
                 while (triedAttempts < 3){
@@ -103,8 +103,8 @@ class Appliance {
                         System.out.println("How many appliances do you want?");
                         int appliancesToAdd = userInput.nextInt();
                         if (inventoryCount + appliancesToAdd <= maxAppliances){
-                        	for (int i = 1; i <= appliancesToAdd; i++) {
-                        		System.out.println("Adding appliance " + i);
+                            for (int i = 1; i <= appliancesToAdd; i++) {
+                                System.out.println("Adding appliance " + i);
                                 System.out.print("Please enter appliance type: ");
                                 String enteredType = userInput.next();
                                 System.out.print("Please enter appliance brand: ");
@@ -114,9 +114,8 @@ class Appliance {
 
                                 inventory[numOfAppliances] = new Appliance(enteredType, enteredBrand, enteredPrice);
                                 System.out.println();
-                        	}
-                           
-                        	inventoryCount += appliancesToAdd;
+                            }
+                        inventoryCount += appliancesToAdd;
                         }
                         else{
                             System.out.println("There are only " + (maxAppliances - inventoryCount) + " spaces left");
@@ -138,17 +137,34 @@ class Appliance {
             
             else if(code == 2)
             {
+                while(triedAttempts < 3)
+                {
+                    System.out.println("Please enter password to edit an appliance: ");
+                    String enteredPassword = userInput.next();
+                    if (enteredPassword.equals(password)){
+                        System.out.println("Please enter the serial number of the appliance you would like to edit.");
+                        if(userInput.hasNextLong())
+                        {
+                            long enteredSN = userInput.nextLong();
+                            System.out.println("Appliance Serial #: " + findAppliancesBySerialNumber(enteredSN, inventory).getSerialNumber() + "\n"
+                            + "Brand: " + findAppliancesBySerialNumber(enteredSN, inventory).getBrand() + "\n" 
+                            + "Type: " + findAppliancesBySerialNumber(enteredSN, inventory).getType() + "\n"
+                            + "Price: " + findAppliancesBySerialNumber(enteredSN, inventory).getPrice());
+                        }
+                        triedAttempts = 0;
+                    }
+                    triedAttempts++;
+                }
+                menuOptions();
                 
-
-
             }
             
             else if(code == 3)
             {
                 
-            	System.out.print("Please enter a brand name: ");
-            	String brand = userInput.next();
-            	findAppliancesBy(brand, inventory);
+                System.out.print("Please enter a brand name: ");
+                String brand = userInput.next();
+                findAppliancesBy(brand, inventory);
 
             }
             
@@ -157,7 +173,7 @@ class Appliance {
                 System.out.println("Program detected suspicious activities and will terminate immediately!");
                 System.exit(0);
             }
-            //menuOptions();
+            
             
             triedAttempts = 0;
         }
@@ -189,32 +205,45 @@ class Appliance {
             }
         }
         else {
-          
             System.out.println("Please enter an integer code");
             menuOptions();
-             
         }
         userInput.close();
         return 0; //to make the compiler happy, needs that guaranteed return
     }   // menuOptions()
     
     public static void findAppliancesBy(String brand, Appliance[] inventory) {
-    	int totalAppliances = 0;
-    	System.out.println("Here are all the Appliances of the brand '" + brand + "':");
-    	for (Appliance appliance : inventory) {
-    		if (appliance != null) {
-    			if (appliance.getBrand().equals(brand)) {
-        			System.out.println(appliance);
-        			totalAppliances++;
-        		}
-    		}
-    	}
-    	
-    	if (totalAppliances == 0) {
-    		System.out.println("No appliances found with brand '" + brand + "'.");
-    	}
-    	System.out.println();
-    }	// findAppliancesBy()
+        int totalAppliances = 0;
+        System.out.println("Here are all the Appliances of the brand '" + brand + "':");
+        for (Appliance appliance : inventory) {
+            if (appliance != null) {
+                if (appliance.getBrand().equals(brand)) {
+                    System.out.println(appliance);
+                    totalAppliances++;
+                }
+            }
+        }
+        if (totalAppliances == 0) {
+            System.out.println("No appliances found with brand '" + brand + "'.");
+        }
+        System.out.println();
+    }	// findAppliancesBy() 
+    public static Appliance findAppliancesBySerialNumber(long enteredNum, Appliance[] inventory)
+    {
+        for(int n = 0; n < inventory.length; n++)
+        {
+            if(inventory[n].getSerialNumber() == enteredNum)
+            {
+                return inventory[n];
+            }
+            else if(inventory[n] == null)
+            {
+                System.out.println("sereial number does not exist");
+            }
+        }
+        menuOptions();
+        return inventory[0]; //makes the compiler happy :)
+    }
 }   // class
 
 
