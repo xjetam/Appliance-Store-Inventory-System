@@ -92,7 +92,9 @@ class Appliance {
 
         int code;
         do {
+
         	 code = menuOptions(userInput);
+
             
             if (code == 1){
                 while (triedAttempts < 3){	// loops three times to give the user three chances to enter correct password
@@ -100,10 +102,12 @@ class Appliance {
                     String enteredPassword = userInput.next();
                     if (enteredPassword.equals(password)){
                         System.out.println("How many appliances do you want?");
+
                         int appliancesToAdd = integerCheck(userInput);	// makes sure that user passes a valid integer value
                         if (inventoryCount + appliancesToAdd <= maxAppliances){	// making sure that the user doesn't add more appliances than limit
                         	for (int i = 1; i <= appliancesToAdd; i++) {	// loops and adds the requested number of appliances
                         		System.out.println();
+
                         		System.out.println("Adding appliance " + i);
                                 System.out.print("Please enter appliance type: ");
                                 String enteredType = userInput.next();
@@ -114,6 +118,9 @@ class Appliance {
 
                                 inventory[numOfAppliances] = new Appliance(enteredType, enteredBrand, enteredPrice);
                                 // creates appliance object according to given info by user and places in the inventory
+
+                                System.out.println();
+
                         	}
                            
                         	inventoryCount += appliancesToAdd;	// adds number of appliances to inventory count
@@ -135,17 +142,21 @@ class Appliance {
                 
                 triedAttempts = 0;	// reset the tried attempts but leave the total attempts since after 12 wrong attempts total the system is suspended
                 if (totalAttempts == 12){
+
                     System.out.println("\nProgram detected suspicious activities and will terminate immediately!");
+
                     System.exit(0);	// suspends program
                 }
                 System.out.println();
             }	// CODE 1
-            
+
            
             /*
             else if(code == 2)
             {
+
             	while(triedAttempts < 3)
+
                 {
                     System.out.println("Please enter password to edit an appliance: ");
                     String enteredPassword = userInput.next();
@@ -165,11 +176,13 @@ class Appliance {
                 }
                 menuOptions(userInput);
                 
+
             }
             */
             
             else if(code == 3)
             {
+
             	System.out.print("Please enter a brand name: ");
             	String brand = userInput.next();
             	findAppliancesBy(brand, inventory);	// all the work is in the static method
@@ -178,8 +191,10 @@ class Appliance {
             
             else if(code == 4)
             {
+
             	System.out.print("Please enter a price: ");
             	int price = integerCheck(userInput); // go check out integerCheck()
+
             	findCheaperThan(price, inventory);	// all the work is in the static method
 
             }
@@ -192,6 +207,7 @@ class Appliance {
     }   // MAIN
     
     
+
     public static int menuOptions(Scanner input){
         while (true) {	// the function loops until the user enters a valid code, redisplaying the menu each time
 	        System.out.println("What do you want to do?");
@@ -230,7 +246,27 @@ class Appliance {
     	System.out.println();
     }	// FIND APPLIANCES BY
     
+
     /*
+
+    
+    public static void findCheaperThan(int price, Appliance[] inventory) {
+    	int totalAppliances = 0;	// checks if any appliances are cheaper than passed price
+    	for (Appliance appliance : inventory) {	// loops through inventory and compares each appliance's price to passed price
+    		if(appliance != null) {	// checks that an appliance object actually exists at current index
+	    		if (appliance.getPrice() < price) {	// if appliance price is lower than passed price, the appliance's info is printed using toString() method
+	    			System.out.println(appliance);
+	    			totalAppliances++;
+	    		}
+    		}
+    	}
+    	if(totalAppliances == 0) {
+    		System.out.println("No appliances found cheaper than $" + price + ".");
+    	}
+    	System.out.println();
+    }	// FIND CHEAPER THAN
+
+
     public static Appliance findAppliancesBySerialNumber(long enteredNum, Appliance[] inventory)
     {
         for(int n = 0; n < inventory.length; n++)
@@ -247,6 +283,7 @@ class Appliance {
         //menuOptions();
         return inventory[0]; //makes the compiler happy :)
     }
+
     */
     
     public static void findCheaperThan(int price, Appliance[] inventory) {
@@ -285,4 +322,5 @@ class Appliance {
     }
     
 }   // CLASS
+
 
