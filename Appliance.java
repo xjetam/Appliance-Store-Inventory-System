@@ -12,7 +12,7 @@ class Appliance {
     private String type;
     private String brand;
     private long serialNumber;
-    static long SNCtr = 100000000;
+    static long SNCtr = 1000000;
     static  int numOfAppliances = 0;
     private double price;
 
@@ -151,45 +151,68 @@ class Appliance {
             
             else if(code == 2)
             {
+                long enteredSN;
                 while(triedAttempts < 3)
                 {
                     System.out.println("Please enter password to edit an appliance: ");
                     String enteredPassword = userInput.next();
                     if (enteredPassword.equals(password)){
-                        System.out.println("Please enter the serial number of the appliance you would like to edit.");
-                        long enteredSN = longCheck(userInput);
-                        System.out.println("Appliance Serial #: " + findAppliancesBySerialNumber(enteredSN, inventory).getSerialNumber() + "\n"
-                        + "Brand: " + findAppliancesBySerialNumber(enteredSN, inventory).getBrand() + "\n" 
-                        + "Type: " + findAppliancesBySerialNumber(enteredSN, inventory).getType() + "\n"
-                        + "Price: " + findAppliancesBySerialNumber(enteredSN, inventory).getPrice());
-                        
+                        boolean updatingAppliance = true;
+                        while (updatingAppliance){
+                            System.out.println("Please enter the serial number of the appliance you would like to edit.");
+                            enteredSN = longCheck(userInput);
+                            if (findAppliancesBySerialNumber(enteredSN, inventory) != null){
+                                System.out.println("Appliance Serial #: " + findAppliancesBySerialNumber(enteredSN, inventory).getSerialNumber() + "\n"
+                                + "Brand: " + findAppliancesBySerialNumber(enteredSN, inventory).getBrand() + "\n" 
+                                + "Type: " + findAppliancesBySerialNumber(enteredSN, inventory).getType() + "\n"
+                                + "Price: " + findAppliancesBySerialNumber(enteredSN, inventory).getPrice());
+                                //int editCode = editMenuOptions(userInput);
+
+                            }
+                            else{
+                                System.out.println("If you would like to try another serial number, enter y below." +
+                                 "otherwise you will be taken back to the main menu");
+                                 String response = userInput.next();
+                                 if (!(response.equals("y"))){
+                                    break;
+                                 }
+                            }
+                        }
                         triedAttempts = 0;
+                        break;
                     }
                     triedAttempts++;
                 }
-                menuOptions(userInput);
+                /*
+                int editCode = editMenuOptions(userInput);
+                switch(editCode)
+                {
+                    case 1:
+                        System.out.println("Please enter the new Brand: ");
+                        String newBrand = userInput.next();
+                        
+                }
+                */
+                //menuOptions(userInput);
                 
+                triedAttempts = 0;
 
             }
             
             
             else if(code == 3)
             {
-
                 System.out.print("Please enter a brand name: ");
                 String brand = userInput.next();
             	findAppliancesBy(brand, inventory);	// all the work is in the static method
-
             }
             
             else if(code == 4)
             {
-
                 System.out.print("Please enter a price: ");
             	int price = integerCheck(userInput); // go check out integerCheck()
 
             	findCheaperThan(price, inventory);	// all the work is in the static method
-
             }
             
             
@@ -206,7 +229,7 @@ class Appliance {
 	        System.out.println("What do you want to do?");
 	        System.out.println("\t1.\tEnter new appliances");
 	        System.out.println("\t2.\tChange information of an appliance (password required)");
-	        System.out.println("\t3.\tDisplay all appliances of by a specific brand");
+            System.out.println("\t3.\tDisplay all appliances of by a specific brand");
 	        System.out.println("\t4.\tDisplay all appliances under a certain price");
 	        System.out.println("\t5.\tQuit");
 	        System.out.println("Please enter your choice>"); 
@@ -240,36 +263,20 @@ class Appliance {
     }	// FIND APPLIANCES BY
     
 
-    /*
 
-    
-    public static void findCheaperThan(int price, Appliance[] inventory) {
-    	int totalAppliances = 0;	// checks if any appliances are cheaper than passed price
-    	for (Appliance appliance : inventory) {	// loops through inventory and compares each appliance's price to passed price
-    		if(appliance != null) {	// checks that an appliance object actually exists at current index
-	    		if (appliance.getPrice() < price) {	// if appliance price is lower than passed price, the appliance's info is printed using toString() method
-                    System.out.println(appliance);
-                    totalAppliances++;
-                }
-            }
-        }
-        if(totalAppliances == 0) {
-            System.out.println("No appliances found cheaper than $" + price + ".");
-        }
-        System.out.println();
-    }	// FIND CHEAPER THAN
-*/
 
     public static Appliance findAppliancesBySerialNumber(long enteredNum, Appliance[] inventory)
     {
-        for(int n = 0; n < inventory.length; n++)
+        for(Appliance appliance : inventory)
         {
-            if(inventory[n].getSerialNumber() == enteredNum)
-            {
-                return inventory[n];
+            if (appliance != null){
+                if(appliance.getSerialNumber() == enteredNum)
+                {
+                    return appliance;
+                }
             }
         }
-        return inventory[0]; //makes the compiler happy :)
+        return null; //makes the compiler happy :)
     }
     
     public static void findCheaperThan(int price, Appliance[] inventory) {
@@ -316,7 +323,7 @@ class Appliance {
         long longOut = input.nextLong();
         return longOut; //returns the valid long value
     }
-    public int editMenuOptions(Scanner userInput)
+    public static int editMenuOptions(Scanner input)
     {
         while (true) 
         {	// the function loops until the user enters a valid code, redisplaying the menu each time
@@ -327,7 +334,7 @@ class Appliance {
             System.out.println("\t4.\tQuit");
             System.out.println("Please enter your choice>"); 
             
-            int inputNum = integerCheck(userInput);	// to prevent errors if the user enters a non integer value
+            int inputNum = integerCheck(input);	// to prevent errors if the user enters a non integer value
             if (inputNum > 0 && inputNum <= 4)
             {
                 return inputNum;
@@ -339,6 +346,13 @@ class Appliance {
         }
         
     }
+
+    /* 
+    public static int editAppliance(int code, Appliance appliance, Scanner input){
+
+    }
+    */
+
 }   // CLASS
 
 
