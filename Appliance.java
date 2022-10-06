@@ -1,5 +1,6 @@
 
-import java.util.Scanner; 
+import java.util.Scanner;
+
 
 /**
  * Assignment 1
@@ -123,7 +124,7 @@ class Appliance {
      */
     public String toString()
     {
-        return "Type: " + type + "\tBrand: " + brand + "\tSerial Number: " + serialNumber + "\tPrice: " + price;
+        return "Type: " + type + "\nBrand: " + brand + "\nSerial Number: " + serialNumber + "\nPrice: " + price;
     }
 
     /**
@@ -233,33 +234,49 @@ class Appliance {
                     String enteredPassword = userInput.next();
                     if (enteredPassword.equals(password)){
                         boolean updatingAppliance = true;
-                        while (updatingAppliance){
+                        while (updatingAppliance)
+                        {
+                            
+                            
                             System.out.println("Please enter the serial number of the appliance you would like to edit.");
                             enteredSN = longCheck(userInput);
                             if (findAppliancesBySerialNumber(enteredSN, inventory) != null)
-                            {
-                                System.out.println("Appliance Serial #: " + findAppliancesBySerialNumber(enteredSN, inventory).getSerialNumber() + "\n"
-                                + "Brand: " + findAppliancesBySerialNumber(enteredSN, inventory).getBrand() + "\n" 
-                                + "Type: " + findAppliancesBySerialNumber(enteredSN, inventory).getType() + "\n"
-                                + "Price: " + findAppliancesBySerialNumber(enteredSN, inventory).getPrice());
-                                //int editCode = editMenuOptions(userInput);
-
+                            { 
+                                System.out.println("Appliance Serial # " + findAppliancesBySerialNumber(enteredSN, inventory).getSerialNumber()
+                                + "\nBrand: " + findAppliancesBySerialNumber(enteredSN, inventory).getBrand()
+                                + "\nType: " + findAppliancesBySerialNumber(enteredSN, inventory).getType()
+                                + "\nPrice: " + findAppliancesBySerialNumber(enteredSN, inventory).getPrice());
+                                
+                                    int editCode = editMenuOptions(userInput);
+                                    if(editCode == 4)
+                                    {
+                                        break;
+                                    }
+                                    findAppliancesBySerialNumber(enteredSN, inventory).editAppliance(editCode, userInput);
                             }
                             else
                             {
-                                System.out.println("If you would like to try another serial number, enter y below." +
-                                "otherwise you will be taken back to the main menu");
+                                System.out.println("Serial number does not match any appliance.");
+                                System.out.println("If you would like to try another serial number, enter y below. " +
+                                "Otherwise you will be taken back to the main menu");
                                 String response = userInput.next();
                                 if (!(response.equals("y")))
                                 {
                                     break;
                                 }
                             }
+                            
+                            
                         }
                         triedAttempts = 0;
                         break;
                     }
-                    triedAttempts++;
+                    else
+                    {
+                        System.out.println("Wrong password.");
+                        triedAttempts++;
+                    }
+                    
                 }
 
                 triedAttempts = 0;
@@ -291,21 +308,21 @@ class Appliance {
     
     public static int menuOptions(Scanner input){
         while (true) {	// the function loops until the user enters a valid code, redisplaying the menu each time
-	        System.out.println("What do you want to do?");
-	        System.out.println("\t1.\tEnter new appliances");
-	        System.out.println("\t2.\tChange information of an appliance (password required)");
+            System.out.println("What do you want to do?");
+            System.out.println("\t1.\tEnter new appliances");
+            System.out.println("\t2.\tChange information of an appliance (password required)");
             System.out.println("\t3.\tDisplay all appliances of by a specific brand");
-	        System.out.println("\t4.\tDisplay all appliances under a certain price");
-	        System.out.println("\t5.\tQuit");
-	        System.out.println("Please enter your choice>"); 
-	        
+            System.out.println("\t4.\tDisplay all appliances under a certain price");
+            System.out.println("\t5.\tQuit");
+            System.out.println("Please enter your choice>"); 
+            
 	        int inputNum = integerCheck(input);	// to prevent errors if the user enters a non integer value
-	        if (inputNum > 0 && inputNum <= 5){
-	            return inputNum;
-	        }
-	        else{
-	            System.out.println("Please enter an valid code\n");
-	        }
+            if (inputNum > 0 && inputNum <= 5){
+                return inputNum;
+            }
+            else{
+                System.out.println("Please enter an valid code\n");
+            }
         }
     }   // MENU OPTIONS
     
@@ -388,6 +405,20 @@ class Appliance {
         long longOut = input.nextLong();
         return longOut; //returns the valid long value
     }
+    public static Boolean typeCheck(String enteredType)
+    {
+        String[] types = { "Fridge", "Air Conditioner", "Washer", "Dryer",
+            "Freezer", "Stove", "Dishwasher", "Water Heaters", "Microwave"};
+            for(int n = 0; n<8; n++)
+            {
+                if(types[n].equals(enteredType))
+                {
+                    return true;
+                }
+            }
+            System.out.println("Please enter a valid type.");
+            return false; 
+    }
     public static int editMenuOptions(Scanner input)
     {
         while (true) 
@@ -411,30 +442,51 @@ class Appliance {
         }
         
     }
-    public static Boolean checkType(String enteredType)
-    {
-        String[] types = { "Fridge", "Air Conditioner", "Washer", "Dryer",
-            "Freezer", "Stove", "Dishwasher", "Water Heaters", "Microwave"};
-             
-    }
 
     
-    public static Appliance editAppliance(int code, Appliance appliance, Scanner input)
+    public void editAppliance(int code, Scanner input)
     {
                 switch(code)
                 {
                     case 1:
 
-                        System.out.println("Please enter the new Brand: ");
+                        System.out.println("Please enter the new brand: ");
                         String newBrand = input.next();
-                        appliance.setBrand(newBrand);
-                        return appliance;
+                        this.setBrand(newBrand);
+                        System.out.println("Updated info for this applaince:");
+                        System.out.println(this);
+                        break;
 
                     case 2:
+                        System.out.println("Please enter the new type: ");
+                        if(input.hasNext())
+                        {
+                            String newType = input.next();
+                            typeCheck(newType);
+                            if(typeCheck(newType) == true)
+                            {
+                                this.setType(newType);
+                                System.out.println("Updated info for this applaince:");
+                                System.out.println(this);
+                            }
+                            
+                        }
+                        else
+                        {
+                            System.out.println("Please enter a valid string.");
+                        }
+                        break;
 
-                        
+                    case 3:
+                        System.out.println("Please enter the new brand: ");
+                        double newPrice = input.nextDouble();
+                        this.setPrice(newPrice);
+                        System.out.println(this);
+                    break;
+
+                    case 4:
+                        break;       
                 }
-                return appliance;
 
     }
     
