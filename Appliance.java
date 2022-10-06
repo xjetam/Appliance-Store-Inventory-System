@@ -1,13 +1,13 @@
-// -----------------------------------------------------
-// Assignment 1
-// Question: part 1
-// Written by: Linden Wheeler 40195748
-// For COMP 249 Section D - Fall 2022
-// Started on: sept 16, 2022
-// ----------------------------------------------------- 
 
 import java.util.Scanner; 
 
+/**
+ * Assignment 1
+ * For COMP  249 Section D - Fall 2022
+ * 
+ * @author Linden Wheeler 40195748 and Matej Pederson 40209550
+ * @version 1.19
+ */
 class Appliance {
     private String type;
     private String brand;
@@ -16,7 +16,9 @@ class Appliance {
     static  int numOfAppliances = 0;
     private double price;
 
-    //default constructor
+    /**
+     * Default constructor.
+     */
     public Appliance(){
         type = "unknown";
         brand = "unknown";
@@ -25,6 +27,14 @@ class Appliance {
         numOfAppliances++;
         price = 1.0;    // minimum price is $1
     }
+
+    /**
+     * Constructor that takes parameters.
+     * 
+     * @param type type of appliance
+     * @param brand brand of appliance
+     * @param price price of appliance
+     */
     public Appliance(String type, String brand, double price){     
         this.type = type;
         this.brand = brand;
@@ -32,46 +42,105 @@ class Appliance {
         serialNumber = SNCtr;
         SNCtr++;
         numOfAppliances++;
-    }
-    //getters and setters
-    //type
+    } 
+
+    /**
+     * Returns type of appliance.
+     * 
+     * @return string type of appliance
+     */
     public String getType(){
         return type;
     }
+
+    /**
+     * Sets type of appliance.
+     * 
+     * @param type of appliance
+     */
     public void setType(String type){
         this.type = type;
     }
-    //brand
+    
+    /**
+     * Returns brand of appliance.
+     * 
+     * @return string brand of appliance
+     */
     public String getBrand(){
         return brand;
     }
+
+    /**
+     * Sets brand of appliance.
+     * 
+     * @param brand of appliance
+     */
     public void setBrand(String brand){
         this.brand = brand;
     }
-    //serialNumber
+
+    /**
+     * Returns serial sumber of appliance.
+     * 
+     * @return long serial sumber of appliance
+     */
     public long getSerialNumber(){
         return serialNumber;
     }
+
+    /**
+     * Sets serial sumber of appliance.
+     * 
+     * @param serialNumber serial number of appliance
+     */
     public void setSerialNumber(long serialNumber){
         this.serialNumber = serialNumber;
     }
-    //price
+
+    /**
+     * Returns price of appliance.
+     * 
+     * @return double price of appliance
+     */
     public double getPrice(){
         return price;
     }
+
+    /**
+     * Sets price of appliance.
+     * 
+     * @param price of appliance
+     */
     public void setPrice(double price){ 
         this.price = (price >= 1) ? price : 1;	//checking if price is greater than one
     }
-    //toString method returns all info of the appliance object
+
+    /**
+     * Allows object info to be printed out
+     * 
+     * @return string of information about appliance
+     */
     public String toString()
     {
         return "Type: " + type + "\tBrand: " + brand + "\tSerial Number: " + serialNumber + "\tPrice: " + price;
     }
-    //returns the number of appliances
+
+    /**
+     * Returns number of appliances created.
+     * 
+     * @return int number of appliances
+     */
     public int findNumberOfCreatedAppliances(){
         return numOfAppliances;
     }
-    //checks if two appliance objects have the same type, brand, and price
+
+    /**
+     * Checks if two appliance objects have the same type, brand, and price.
+     * 
+     * @param other appliance to be compared
+     * @return boolean true if appliances are equal, false if appliances have different attributes
+     */
     public boolean equals(Appliance other)
     {
         return (this.type.equals(other.type) && this.brand.equals(other.brand) && this.price == other.price && this.serialNumber == other.serialNumber);
@@ -91,10 +160,12 @@ class Appliance {
         int inventoryCount = 0;	// keeping track of how many appliances have actually been added
 
         int code;
-        do {
+        do 
+        {
             code = menuOptions(userInput);
 
-            if (code == 1){
+            if (code == 1)
+            {
                 while (triedAttempts < 3){	// loops three times to give the user three chances to enter correct password
                     System.out.println("Please enter password to add a new appliance: ");
                     String enteredPassword = userInput.next();
@@ -102,8 +173,10 @@ class Appliance {
                         System.out.println("How many appliances do you want?");
 
                         int appliancesToAdd = integerCheck(userInput);	// makes sure that user passes a valid integer value
-                        if (inventoryCount + appliancesToAdd <= maxAppliances){	// making sure that the user doesn't add more appliances than limit
-                        	for (int i = 1; i <= appliancesToAdd; i++) {	// loops and adds the requested number of appliances
+                        if (inventoryCount + appliancesToAdd <= maxAppliances)
+                        {	// making sure that the user doesn't add more appliances than limit
+                            for (int i = 1; i <= appliancesToAdd; i++)
+                            {	// loops and adds the requested number of appliances
                                 System.out.println();
 
                                 System.out.println("Adding appliance " + i);
@@ -119,10 +192,11 @@ class Appliance {
 
                                 System.out.println();
 
-                        }
+                            }
                         	inventoryCount += appliancesToAdd;	// adds number of appliances to inventory count
                         }
-                        else{
+                        else
+                        {
                             System.out.println("There are only " + (maxAppliances - inventoryCount) + " spaces left");
                         }
                         
@@ -130,7 +204,8 @@ class Appliance {
                         totalAttempts = 0;
                         break; // to break out of password check loop
                     } 
-                    else{
+                    else
+                    {
                         System.out.println("Wrong password");
                         triedAttempts++;	// increment both attempts
                         totalAttempts++; 
@@ -138,7 +213,8 @@ class Appliance {
                 }	// PASSWORD LOOP
                 
                 triedAttempts = 0;	// reset the tried attempts but leave the total attempts since after 12 wrong attempts total the system is suspended
-                if (totalAttempts == 12){
+                if (totalAttempts == 12)
+                {
 
                     System.out.println("\nProgram detected suspicious activities and will terminate immediately!");
 
@@ -147,7 +223,6 @@ class Appliance {
                 System.out.println();
             }	// CODE 1
 
-           
             
             else if(code == 2)
             {
@@ -161,7 +236,8 @@ class Appliance {
                         while (updatingAppliance){
                             System.out.println("Please enter the serial number of the appliance you would like to edit.");
                             enteredSN = longCheck(userInput);
-                            if (findAppliancesBySerialNumber(enteredSN, inventory) != null){
+                            if (findAppliancesBySerialNumber(enteredSN, inventory) != null)
+                            {
                                 System.out.println("Appliance Serial #: " + findAppliancesBySerialNumber(enteredSN, inventory).getSerialNumber() + "\n"
                                 + "Brand: " + findAppliancesBySerialNumber(enteredSN, inventory).getBrand() + "\n" 
                                 + "Type: " + findAppliancesBySerialNumber(enteredSN, inventory).getType() + "\n"
@@ -169,13 +245,15 @@ class Appliance {
                                 //int editCode = editMenuOptions(userInput);
 
                             }
-                            else{
+                            else
+                            {
                                 System.out.println("If you would like to try another serial number, enter y below." +
-                                 "otherwise you will be taken back to the main menu");
-                                 String response = userInput.next();
-                                 if (!(response.equals("y"))){
+                                "otherwise you will be taken back to the main menu");
+                                String response = userInput.next();
+                                if (!(response.equals("y")))
+                                {
                                     break;
-                                 }
+                                }
                             }
                         }
                         triedAttempts = 0;
@@ -183,20 +261,8 @@ class Appliance {
                     }
                     triedAttempts++;
                 }
-                /*
-                int editCode = editMenuOptions(userInput);
-                switch(editCode)
-                {
-                    case 1:
-                        System.out.println("Please enter the new Brand: ");
-                        String newBrand = userInput.next();
-                        
-                }
-                */
-                //menuOptions(userInput);
-                
-                triedAttempts = 0;
 
+                triedAttempts = 0;
             }
             
             
@@ -223,7 +289,6 @@ class Appliance {
     }   // MAIN
     
     
-
     public static int menuOptions(Scanner input){
         while (true) {	// the function loops until the user enters a valid code, redisplaying the menu each time
 	        System.out.println("What do you want to do?");
@@ -346,12 +411,33 @@ class Appliance {
         }
         
     }
+    public static Boolean checkType(String enteredType)
+    {
+        String[] types = { "Fridge", "Air Conditioner", "Washer", "Dryer",
+            "Freezer", "Stove", "Dishwasher", "Water Heaters", "Microwave"};
+             
+    }
 
-    /* 
-    public static int editAppliance(int code, Appliance appliance, Scanner input){
+    
+    public static Appliance editAppliance(int code, Appliance appliance, Scanner input)
+    {
+                switch(code)
+                {
+                    case 1:
+
+                        System.out.println("Please enter the new Brand: ");
+                        String newBrand = input.next();
+                        appliance.setBrand(newBrand);
+                        return appliance;
+
+                    case 2:
+
+                        
+                }
+                return appliance;
 
     }
-    */
+    
 
 }   // CLASS
 
