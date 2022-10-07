@@ -361,7 +361,8 @@ class Appliance {
         return null; //makes the compiler happy :)
     }
     
-    public static void findCheaperThan(int price, Appliance[] inventory) {
+    public static void findCheaperThan(int price, Appliance[] inventory) 
+    {
     	int totalAppliances = 0;	// checks if any appliances are cheaper than passed price
         System.out.println("Here are all the appliances cheaper than $" + price + ".");
     	for (Appliance appliance : inventory) {	// loops through inventory and compares each appliance's price to passed price
@@ -459,21 +460,14 @@ class Appliance {
 
                     case 2:
                         System.out.println("Please enter the new type: ");
-                        if(input.hasNext())
+                        
+                        String newType = input.nextLine();
+                        typeCheck(newType);
+                        if(typeCheck(newType) == true)
                         {
-                            String newType = input.next();
-                            typeCheck(newType);
-                            if(typeCheck(newType) == true)
-                            {
-                                this.setType(newType);
-                                System.out.println("Updated info for this applaince:");
-                                System.out.println(this);
-                            }
-                            
-                        }
-                        else
-                        {
-                            System.out.println("Please enter a valid string.");
+                            this.setType(newType);
+                            System.out.println("Updated info for this applaince:");
+                            System.out.println(this);
                         }
                         break;
 
