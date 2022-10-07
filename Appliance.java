@@ -172,27 +172,30 @@ class Appliance {
                     String enteredPassword = userInput.next();
                     if (enteredPassword.equals(password)){
                         System.out.println("How many appliances do you want?");
-
+                        userInput.nextLine(); // clears buffer
                         int appliancesToAdd = integerCheck(userInput);	// makes sure that user passes a valid integer value
                         if (inventoryCount + appliancesToAdd <= maxAppliances)
                         {	// making sure that the user doesn't add more appliances than limit
                             for (int i = 1; i <= appliancesToAdd; i++)
                             {	// loops and adds the requested number of appliances
                                 System.out.println();
-
                                 System.out.println("Adding appliance " + i);
-                                System.out.print("Please enter appliance type: ");
-                                String enteredType = userInput.next();
-                                System.out.print("Please enter appliance brand: ");
-                                String enteredBrand = userInput.next();
-                                System.out.print("Please enter appliance price: ");
-                                double enteredPrice = doubleCheck(userInput);	// makes sure that user passes a valid double value
-
-                                inventory[numOfAppliances] = new Appliance(enteredType, enteredBrand, enteredPrice);
-                                // creates appliance object according to given info by user and places in the inventory
-
-                                System.out.println();
-
+                                while (true) {	// Loops until user enters a valid type
+                                	System.out.print("Please enter appliance type: ");
+                                    String enteredType = userInput.nextLine();
+	                                if (typeCheck(enteredType) == true) {
+		                                System.out.print("Please enter appliance brand: ");
+		                                String enteredBrand = userInput.nextLine();
+		                                System.out.print("Please enter appliance price: ");
+		                                double enteredPrice = doubleCheck(userInput);	// makes sure that user passes a valid double value
+		
+		                                inventory[numOfAppliances] = new Appliance(enteredType, enteredBrand, enteredPrice);
+		                                // creates appliance object according to given info by user and places in the inventory array
+		                                System.out.println();
+		                                break;
+	                                }
+	                                
+                                }
                             }
                         	inventoryCount += appliancesToAdd;	// adds number of appliances to inventory count
                         }
@@ -236,23 +239,22 @@ class Appliance {
                         boolean updatingAppliance = true;
                         while (updatingAppliance)
                         {
-                            
-                            
-                            System.out.println("Please enter the serial number of the appliance you would like to edit.");
+                            System.out.println("Please enter the serial number of the appliance you would like to edit:");
+                            userInput.nextLine();	// clears buffer
                             enteredSN = longCheck(userInput);
                             if (findAppliancesBySerialNumber(enteredSN, inventory) != null)
                             { 
-                                System.out.println("Appliance Serial # " + findAppliancesBySerialNumber(enteredSN, inventory).getSerialNumber()
-                                + "\nBrand: " + findAppliancesBySerialNumber(enteredSN, inventory).getBrand()
-                                + "\nType: " + findAppliancesBySerialNumber(enteredSN, inventory).getType()
-                                + "\nPrice: " + findAppliancesBySerialNumber(enteredSN, inventory).getPrice());
-                                
-                                    int editCode = editMenuOptions(userInput);
-                                    if(editCode == 4)
-                                    {
-                                        break;
-                                    }
-                                    findAppliancesBySerialNumber(enteredSN, inventory).editAppliance(editCode, userInput);
+                            	Appliance chosenAppliance = findAppliancesBySerialNumber(enteredSN, inventory);
+                            	System.out.println("Appliance Serial # " + chosenAppliance.getSerialNumber()
+                                        + "\nBrand: " + chosenAppliance.getBrand()
+                                        + "\nType: " + chosenAppliance.getType()
+                                        + "\nPrice: " + chosenAppliance.getPrice());
+                                int editCode = editMenuOptions(userInput);
+                                if(editCode == 4)
+                                {
+                                    break;
+                                }
+                                findAppliancesBySerialNumber(enteredSN, inventory).editAppliance(editCode, userInput);
                             }
                             else
                             {
@@ -265,8 +267,6 @@ class Appliance {
                                     break;
                                 }
                             }
-                            
-                            
                         }
                         triedAttempts = 0;
                         break;
@@ -280,24 +280,23 @@ class Appliance {
                 }
 
                 triedAttempts = 0;
-            }
+            }	// CODE 2
             
             
             else if(code == 3)
             {
                 System.out.print("Please enter a brand name: ");
-                String brand = userInput.next();
+                //userInput.nextLine(); // clears buffer
+                String brand = userInput.nextLine();
             	findAppliancesBy(brand, inventory);	// all the work is in the static method
             }
             
             else if(code == 4)
             {
                 System.out.print("Please enter a price: ");
-            	int price = integerCheck(userInput); // go check out integerCheck()
-
+            	int price = integerCheck(userInput); // to verify integer is entered
             	findCheaperThan(price, inventory);	// all the work is in the static method
             }
-            
             
         }
         while (code != 5);
@@ -306,8 +305,14 @@ class Appliance {
     }   // MAIN
     
     
+    /**
+     * Loops until the user enters a valid code, redisplaying the menu each time.
+     * 
+     * @param input Scanner object used in driver
+     * @return	valid integer code from 1 to 5
+     */
     public static int menuOptions(Scanner input){
-        while (true) {	// the function loops until the user enters a valid code, redisplaying the menu each time
+        while (true) {
             System.out.println("What do you want to do?");
             System.out.println("\t1.\tEnter new appliances");
             System.out.println("\t2.\tChange information of an appliance (password required)");
@@ -316,6 +321,7 @@ class Appliance {
             System.out.println("\t5.\tQuit");
             System.out.println("Please enter your choice>"); 
             
+            input.nextLine(); // clears buffer
 	        int inputNum = integerCheck(input);	// to prevent errors if the user enters a non integer value
             if (inputNum > 0 && inputNum <= 5){
                 return inputNum;
@@ -324,15 +330,21 @@ class Appliance {
                 System.out.println("Please enter an valid code\n");
             }
         }
-    }   // MENU OPTIONS
+    }
     
+    /**
+     * Loop through given inventory array and prints appliance info if appliance brand matches input brand.
+     * 
+     * @param brand String of brand that is being compared to inventory
+     * @param inventory	Appliance array
+     */
     public static void findAppliancesBy(String brand, Appliance[] inventory) {
     	int totalAppliances = 0;	// checks if any appliances match passed brand
         System.out.println("Here are all the Appliances of the brand '" + brand + "':");
-    	for (Appliance appliance : inventory) {	// loop through inventory array and if the brand passed in matches the current brand, that appliance object's info is printed
+    	for (Appliance appliance : inventory) {	// 
     		if (appliance != null) {	// checks that an appliance object actually exists at current index
                 if (appliance.getBrand().equals(brand)) {
-        			System.out.println(appliance);	// uses toString() method
+        			System.out.println(appliance);
                     totalAppliances++;
                 }
             }
@@ -342,11 +354,15 @@ class Appliance {
             System.out.println("No appliances found with brand '" + brand + "'.");
         }
         System.out.println();
-    }	// FIND APPLIANCES BY
+    }
     
-
-
-
+    /**
+     * Checks if passed serial number matches a serial number in passed Appliance array.
+     * 
+     * @param enteredNum
+     * @param inventory
+     * @return	Appliance matching passed serial number or null
+     */
     public static Appliance findAppliancesBySerialNumber(long enteredNum, Appliance[] inventory)
     {
         for(Appliance appliance : inventory)
@@ -358,15 +374,21 @@ class Appliance {
                 }
             }
         }
-        return null; //makes the compiler happy :)
+        return null;	// No appliance match found
     }
     
+    /**
+     * Prints out appliance info from appliance in passed Appliance array if it's price is lower than passed price.
+     * 
+     * @param price	integer value
+     * @param inventory	Appliance array
+     */
     public static void findCheaperThan(int price, Appliance[] inventory) {
     	int totalAppliances = 0;	// checks if any appliances are cheaper than passed price
-        System.out.println("Here are all the appliances cheaper than $" + price + ".");
-    	for (Appliance appliance : inventory) {	// loops through inventory and compares each appliance's price to passed price
-    		if(appliance != null) {	// checks that an appliance object actually exists at current index
-	    		if (appliance.getPrice() < price) {	// if appliance price is lower than passed price, the appliance's info is printed using toString() method
+        System.out.println("Here are all the appliances cheaper than $" + price + ":");
+    	for (Appliance appliance : inventory) {
+    		if(appliance != null) {	// verify appliance object actually exists at current index
+	    		if (appliance.getPrice() < price) {
                     System.out.println(appliance);
                     totalAppliances++;
                 }
@@ -376,35 +398,61 @@ class Appliance {
             System.out.println("No appliances found cheaper than $" + price + ".");
         }
         System.out.println();
-    }	// FIND CHEAPER THAN
-    
-    public static int integerCheck(Scanner input) {
-    	while (!(input.hasNextInt())) {	// until user enters an integer, the line is discarded into a trash string, and the process is repeated until an integer value is entered
-            String garbage = input.nextLine();
-            System.out.print("Please enter an integer value: ");
-        }
-        int intOut = input.nextInt();
-    	return intOut;	// returns the valid integer value to user
     }
     
+    /**
+     * Loops until user enters a valid integer value.
+     * 
+     * @param input Scanner object from driver
+     * @return	valid integer value
+     */
+    public static int integerCheck(Scanner input) {
+    	while (!(input.hasNextInt())) {
+            String garbage = input.nextLine();	// stores invalid value in garbage variable
+            System.out.print("Please enter an integer value: ");
+        }	
+        int intOut = input.nextInt();
+    	return intOut;
+    }
+    
+    /**
+     * Loops until user enters a valid double value.
+     * 
+     * @param input Scanner object from driver
+     * @return	valid double value
+     */
     public static double doubleCheck(Scanner input) {	
-    	while (!(input.hasNextDouble())) {	// until user enters a double, the line is discarded into a trash string, and the process is repeated until a double value is entered
-            String garbage = input.nextLine();
+    	while (!(input.hasNextDouble())) {
+            String garbage = input.nextLine();	// stores invalid value in garbage variable
             System.out.print("Please enter an double value: ");
         }
         double doubleOut = input.nextDouble();
-    	return doubleOut;	// returns the valid double value to user
+    	return doubleOut;
     }
+    
+    /**
+     * Loops until user enters a valid long value.
+     * 
+     * @param input Scanner object from driver
+     * @return	valid long value
+     */
     public static long longCheck(Scanner input)
     {
-        while(!(input.hasNextLong())) // until user enters a long, the line is discarded into a trash string, and the process repeats until a long is entered
+        while(!(input.hasNextLong()))
         {
-            String garbage = input.nextLine();
+            String garbage = input.nextLine();	// stores invalid value in garbage variable
             System.out.println("Please enter a long value: ");
         }
         long longOut = input.nextLong();
-        return longOut; //returns the valid long value
+        return longOut;
     }
+    
+    /**
+     * Verifies that the type of entered appliance is a valid type.
+     * 
+     * @param enteredType String type of appliance
+     * @return	boolean value (true if entered appliance type is a valid type)
+     */
     public static Boolean typeCheck(String enteredType)
     {
         String[] types = { "Fridge", "Air Conditioner", "Washer", "Dryer",
@@ -416,13 +464,22 @@ class Appliance {
                     return true;
                 }
             }
-            System.out.println("Please enter a valid type.");
+            System.out.println("Please enter a valid type (Fridge, Air Conditioner, Washer, Dryer, "
+            		+ "Freezer, Stove, Dishwasher, Water Heaters, Microwave): ");
             return false; 
     }
+    
+    /**
+     * Loops until the user enters a valid code, redisplaying the edit menu each time.
+     * 
+     * @param input Scanner from driver
+     * @return valid integer edit menu code
+     * @see integerCheck()
+     */
     public static int editMenuOptions(Scanner input)
     {
         while (true) 
-        {	// the function loops until the user enters a valid code, redisplaying the menu each time
+        {
             System.out.println("What information would you like to change?");
             System.out.println("\t1.\tBrand");
             System.out.println("\t2.\tType");
@@ -430,6 +487,7 @@ class Appliance {
             System.out.println("\t4.\tQuit");
             System.out.println("Please enter your choice>"); 
             
+            input.nextLine();	// clears buffer
             int inputNum = integerCheck(input);	// to prevent errors if the user enters a non integer value
             if (inputNum > 0 && inputNum <= 4)
             {
@@ -443,7 +501,12 @@ class Appliance {
         
     }
 
-    
+    /**
+     * 
+     * 
+     * @param code
+     * @param input
+     */
     public void editAppliance(int code, Scanner input)
     {
                 switch(code)
@@ -451,7 +514,7 @@ class Appliance {
                     case 1:
 
                         System.out.println("Please enter the new brand: ");
-                        String newBrand = input.next();
+                        String newBrand = input.nextLine();
                         this.setBrand(newBrand);
                         System.out.println("Updated info for this applaince:");
                         System.out.println(this);
@@ -459,9 +522,9 @@ class Appliance {
 
                     case 2:
                         System.out.println("Please enter the new type: ");
-                        if(input.hasNext())
+                        if(input.hasNext())	// everything is a valid string my guy
                         {
-                            String newType = input.next();
+                            String newType = input.nextLine();
                             typeCheck(newType);
                             if(typeCheck(newType) == true)
                             {
@@ -478,7 +541,8 @@ class Appliance {
                         break;
 
                     case 3:
-                        System.out.println("Please enter the new brand: ");
+                        System.out.println("Please enter the new price: ");
+                        input.nextLine();	// clears buffer
                         double newPrice = input.nextDouble();
                         this.setPrice(newPrice);
                         System.out.println(this);
@@ -492,5 +556,3 @@ class Appliance {
     
 
 }   // CLASS
-
-
